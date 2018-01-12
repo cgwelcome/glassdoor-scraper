@@ -48,10 +48,19 @@ class GlassDoorParser(Parser):
         return self.soup.find('div', class_="ratingNum").get_text(strip=True)
 
 
-r = requests.Session()
-headers = { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36' }
-response = r.get('https://www.glassdoor.ca/Overview/Working-at-Media-10-EI_IE1079906.11,19.htm', headers=headers)
-
+class Client:
+    
+    def __init__(self):
+        self.headers = { 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36' }
+        self.session = requests.Session()
+    
+    def get(self, website):
+        return self.session.get(website, headers=self.headers)
+        
+    
+website = 'https://www.glassdoor.ca/Overview/Working-at-Media-10-EI_IE1079906.11,19.htm'
+client = Client()
+response = client.get(website)
 parser = GlassDoorParser(response.text)
 print(parser.company)
 print(parser.website)
